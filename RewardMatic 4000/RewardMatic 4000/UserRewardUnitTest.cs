@@ -16,13 +16,13 @@ namespace RewardMatic_4000
             User aspidistra = new User();
 
             Assert.AreEqual(0, aspidistra.Score);
-            
+
             aspidistra.UpdateScore(250);
-            
-            Assert.AreEqual(250,aspidistra.Score);
+
+            Assert.AreEqual(250, aspidistra.Score);
 
             aspidistra.UpdateScore(250000);
-            
+
             Assert.AreEqual(250250, aspidistra.Score);
         }
 
@@ -32,33 +32,34 @@ namespace RewardMatic_4000
         public void TestRewardInProgress()
         {
             User rangdo = new User();
-            
+
             Assert.AreEqual(rangdo.GetRewardInProgress(), Reward.AvailableRewards[0]);
-            
+
             rangdo.UpdateScore(250);
-            
+
             Assert.AreEqual(rangdo.GetRewardInProgress(), Reward.AvailableRewards[1]);
-            
+
             rangdo.UpdateScore(250000);
-            
+
             Assert.IsNull(rangdo.GetRewardInProgress());
         }
 
         // test to make sure the "latest reward received" function works correctly
         // TODO implement User.GetLatestRewardReceived()
+        [Test]
         public void TestLatestReward()
         {
             User argond = new User();
-            
+
             Assert.IsNull(argond.GetLatestRewardReceived());
-            
+
             argond.UpdateScore(250);
-            
+
             Assert.AreEqual(Reward.AvailableRewards[0], argond.GetLatestRewardReceived());
-            
+
             argond.UpdateScore(250000);
-            
-            Assert.AreEqual(Reward.AvailableRewards[6], argond.GetLatestRewardReceived());
+
+            Assert.AreEqual(Reward.AvailableRewards[Reward.AvailableRewards.Length - 1], argond.GetLatestRewardReceived());
         }
     }
 }
