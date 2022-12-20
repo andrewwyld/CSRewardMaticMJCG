@@ -38,7 +38,24 @@ namespace RewardMatic_4000
 
         public Reward? GetLatestRewardReceived()
         {
-            throw new NotImplementedException();
+            var accScoreDifferential = Reward.AvailableRewards[0].ScoreDifferential;
+            if (this.Score <= accScoreDifferential)
+            {
+                return null;
+            }
+
+            for (int index = 0; index < Reward.AvailableRewards.Length; index++)
+            {
+                var currentReward = Reward.AvailableRewards[index];
+                if (this.Score <= accScoreDifferential)
+                {
+                    return Reward.AvailableRewards[index - 1];
+                }
+                accScoreDifferential += currentReward.ScoreDifferential;
+            }
+
+            return Reward.AvailableRewards[Reward.AvailableRewards.Length - 1];
+
         }
     }
 }
