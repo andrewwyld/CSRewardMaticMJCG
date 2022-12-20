@@ -22,26 +22,12 @@ namespace RewardMatic_4000
             _score += update;
         }
 
-        public Reward? GetRewardInProgress()
-        {
-            var accScoreDifferential = Reward.AvailableRewards[0].ScoreDifferential;
-            foreach (var currentReward in Reward.AvailableRewards)
-            {
-                if (this.Score < accScoreDifferential)
-                {
-                    return currentReward;
-                }
-                accScoreDifferential += currentReward.ScoreDifferential;
-            }
-            return null;
-        }
-
-        public Reward? GetLatestRewardReceived()
+        protected int GetRewardInProgressIndex()
         {
             var accScoreDifferential = Reward.AvailableRewards[0].ScoreDifferential;
             if (this.Score <= accScoreDifferential)
             {
-                return null;
+                return 0;
             }
 
             for (int index = 0; index < Reward.AvailableRewards.Length; index++)
@@ -49,12 +35,32 @@ namespace RewardMatic_4000
                 var currentReward = Reward.AvailableRewards[index];
                 if (this.Score <= accScoreDifferential)
                 {
-                    return Reward.AvailableRewards[index - 1];
+                    return index;
                 }
                 accScoreDifferential += currentReward.ScoreDifferential;
             }
 
-            return Reward.AvailableRewards[Reward.AvailableRewards.Length - 1];
+            return Reward.AvailableRewards.Length;
+        }
+
+        public Reward? GetRewardInProgress()
+        {
+            var possibleRewardInProgressIndex = this.GetRewardInProgressIndex();
+            if (possibleRewardInProgressIndex >= Reward.AvailableRewards.Length)
+            {
+                return null;
+            }
+            return Reward.AvailableRewards[possibleRewardInProgressIndex];
+        }
+
+        public Reward? GetLatestRewardReceived()
+        {
+            var possibleRewardInProgressIndex = this.GetRewardInProgressIndex();
+            if (possibleRewardInProgressIndex == 0)
+            {
+                return null;
+            }
+            return Reward.AvailableRewards[possibleRewardInProgressIndex - 1];
 
         }
     }
