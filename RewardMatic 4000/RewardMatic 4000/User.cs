@@ -24,7 +24,16 @@ namespace RewardMatic_4000
 
         public Reward? GetRewardInProgress()
         {
-            throw new NotImplementedException();
+            var accScoreDifferential = Reward.AvailableRewards[0].ScoreDifferential;
+            foreach (var currentReward in Reward.AvailableRewards)
+            {
+                if (this.Score < accScoreDifferential)
+                {
+                    return currentReward;
+                }
+                accScoreDifferential += currentReward.ScoreDifferential;
+            }
+            return null;
         }
 
         public Reward? GetLatestRewardReceived()
