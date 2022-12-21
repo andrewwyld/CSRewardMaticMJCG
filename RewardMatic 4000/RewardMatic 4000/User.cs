@@ -53,6 +53,46 @@ namespace RewardMatic_4000
             return Reward.AvailableRewards[possibleRewardInProgressIndex];
         }
 
+        protected RewardGroup? GetRewardGroup(Reward? rewardToCheck)
+        {
+            if (rewardToCheck == null)
+            {
+                return null;
+            }
+            foreach (var group in RepositoryReward.allGroups)
+            {
+                if (group.ContainsReward(rewardToCheck))
+                {
+                    return group;
+                }
+            }
+            return null;
+        }
+
+        public RewardGroup? GetRewardGroupForRewardInProgress()
+        {
+            var rewardInProgress = this.GetRewardInProgress();
+            var possibleGroup = this.GetRewardGroup(rewardInProgress);
+            if (possibleGroup == null || rewardInProgress == null)
+            {
+                return null;
+            }
+
+            var lastReward = possibleGroup.rewards[possibleGroup.rewards.Count - 1];
+            if (lastReward != rewardInProgress)
+            {
+                return possibleGroup;
+            }
+
+            return RepositoryReward.nextGroup(possibleGroup);
+
+        }
+
+        public RewardGroup? GetRewardGroupForLatestRewardReceived()
+        {
+            return this.GetRewardGroup(this.GetLatestRewardReceived());
+        }
+
         public Reward? GetLatestRewardReceived()
         {
             var possibleRewardInProgressIndex = this.GetRewardInProgressIndex();
@@ -61,7 +101,6 @@ namespace RewardMatic_4000
                 return null;
             }
             return Reward.AvailableRewards[possibleRewardInProgressIndex - 1];
-
         }
     }
 }
